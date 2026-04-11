@@ -1,0 +1,9 @@
+{
+  "name": "create-checkout-session",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "stripe": "^17.0.0"
+  }
+}
