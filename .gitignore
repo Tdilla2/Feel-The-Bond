@@ -8,3 +8,5 @@ dist
 *.log
 .vite
 .aws-sam
+lambda/*.zip
+lambda/**/package-lock.json
