@@ -1,19 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Feel the Bond — S3 + CloudFront + Lambda + HTTP API for Stripe Checkout
-
-Parameters:
-  StripeSecretKey:
-    Type: String
-    NoEcho: true
-    Description: Stripe secret key (sk_test_... or sk_live_...)
-
-Globals:
-  Function:
-    Runtime: nodejs20.x
-    Timeout: 15
-    MemorySize: 256
-    Architectures: [arm64]
+Description: Feel the Bond — S3 + CloudFront static site
 
 Resources:
   # ---------- Frontend bucket ----------
@@ -28,37 +15,6 @@ Resources:
       OwnershipControls:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
-
-  # ---------- Lambda for Stripe ----------
-  CreateCheckoutSessionFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: lambda/create-checkout-session/
-      Handler: index.handler
-      Environment:
-        Variables:
-          STRIPE_SECRET_KEY: !Ref StripeSecretKey
-      Events:
-        ApiPost:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref HttpApi
-            Path: /api/create-checkout-session
-            Method: POST
-        ApiOptions:
-          Type: HttpApi
-          Properties:
-            ApiId: !Ref HttpApi
-            Path: /api/create-checkout-session
-            Method: OPTIONS
-
-  HttpApi:
-    Type: AWS::Serverless::HttpApi
-    Properties:
-      CorsConfiguration:
-        AllowMethods: [POST, OPTIONS]
-        AllowHeaders: [content-type]
-        AllowOrigins: ['*']
 
   # ---------- CloudFront ----------
   CloudFrontOAC:
@@ -84,11 +40,6 @@ Resources:
             S3OriginConfig:
               OriginAccessIdentity: ''
             OriginAccessControlId: !GetAtt CloudFrontOAC.Id
-          - Id: api-origin
-            DomainName: !Sub '${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'
-            CustomOriginConfig:
-              OriginProtocolPolicy: https-only
-              OriginSSLProtocols: [TLSv1.2]
         DefaultCacheBehavior:
           TargetOriginId: s3-site
           ViewerProtocolPolicy: redirect-to-https
@@ -96,13 +47,6 @@ Resources:
           CachedMethods: [GET, HEAD]
           Compress: true
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6  # CachingOptimized
-        CacheBehaviors:
-          - PathPattern: /api/*
-            TargetOriginId: api-origin
-            ViewerProtocolPolicy: https-only
-            AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
-            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad  # CachingDisabled
-            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac  # AllViewerExceptHostHeader
         CustomErrorResponses:
           - ErrorCode: 403
             ResponseCode: 200
@@ -138,6 +82,3 @@ Outputs:
   CloudFrontDistributionId:
     Description: Use for cache invalidations after deploy
     Value: !Ref Distribution
-  HttpApiEndpoint:
-    Description: Direct API Gateway URL (CloudFront /api/* also routes here)
-    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'

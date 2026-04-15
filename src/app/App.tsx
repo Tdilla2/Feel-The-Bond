@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { HomePage } from "./components/HomePage";
@@ -38,25 +38,12 @@ export default function App() {
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [lastOrder, setLastOrder] = useState<CartItem[]>([]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const status = params.get("checkout");
-    if (status === "success") {
-      try {
-        const saved = sessionStorage.getItem("lastOrder");
-        if (saved) setLastOrder(JSON.parse(saved));
-        sessionStorage.removeItem("lastOrder");
-      } catch {}
-      setCheckoutSuccess(true);
-      setCartItems([]);
-      setCurrentPage("checkout");
-      window.history.replaceState({}, "", window.location.pathname);
-    } else if (status === "cancel") {
-      setCurrentPage("cart");
-      toast.error("Checkout canceled");
-      window.history.replaceState({}, "", window.location.pathname);
-    }
-  }, []);
+  const handleOrderPlaced = (items: CartItem[]) => {
+    setLastOrder(items);
+    setCheckoutSuccess(true);
+    setCartItems([]);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const handleNavigate = (page: string) => {
     // Handle FAQ anchor link
@@ -151,6 +138,7 @@ export default function App() {
               handleNavigate(page);
             }}
             onClearCart={handleClearCart}
+            onOrderPlaced={handleOrderPlaced}
             checkoutSuccess={checkoutSuccess}
             lastOrder={lastOrder}
           />

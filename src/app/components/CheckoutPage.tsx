@@ -16,6 +16,7 @@ interface CheckoutPageProps {
   items: CartItem[];
   onNavigate: (page: string) => void;
   onClearCart: () => void;
+  onOrderPlaced: (items: CartItem[]) => void;
   checkoutSuccess?: boolean;
   lastOrder?: CartItem[];
 }
@@ -24,6 +25,7 @@ export function CheckoutPage({
   items,
   onNavigate,
   onClearCart,
+  onOrderPlaced,
   checkoutSuccess,
   lastOrder,
 }: CheckoutPageProps) {
@@ -39,7 +41,6 @@ export function CheckoutPage({
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const displayItems = checkoutSuccess && lastOrder ? lastOrder : items;
 
@@ -50,30 +51,10 @@ export function CheckoutPage({
   const shipping = subtotal > 50 ? 0 : 5.99;
   const total = subtotal + shipping;
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setLoading(true);
-    try {
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, shipping: formData }),
-      });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || `Request failed: ${res.status}`);
-      }
-      const data = await res.json();
-      if (!data.url) throw new Error("No checkout URL returned");
-      try {
-        sessionStorage.setItem("lastOrder", JSON.stringify(items));
-      } catch {}
-      window.location.href = data.url;
-    } catch (err: any) {
-      setError(err?.message || "Unable to start checkout");
-      setLoading(false);
-    }
+    onOrderPlaced(items);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -248,7 +229,7 @@ export function CheckoutPage({
                 </CardContent>
               </Card>
 
-              {/* Payment - handled by Stripe Checkout */}
+              {/* Payment */}
               <Card>
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
@@ -259,24 +240,9 @@ export function CheckoutPage({
                     </div>
                   </div>
                   <p className="text-[1.75rem] md:text-sm text-muted-foreground leading-relaxed">
-                    You'll be redirected to Stripe's secure checkout to complete
-                    your payment. We accept all major credit and debit cards.
+                    Online payment is not yet available. Place your order and
+                    we'll reach out to confirm payment details.
                   </p>
-                  <div className="mt-4 flex items-center gap-3">
-                    <div className="border rounded px-3 py-2 bg-[#635BFF]">
-                      <svg className="h-16 w-24 md:h-8 md:w-12" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M14.4 13.6C14.4 12.8 15.04 12.48 16.16 12.48C17.76 12.48 19.68 12.96 21.28 13.76V9.76C19.52 9.12 17.76 8.8 16.16 8.8C12.32 8.8 9.6 10.72 9.6 13.92C9.6 19.2 17.12 18.4 17.12 20.64C17.12 21.6 16.32 21.92 15.2 21.92C13.44 21.92 11.36 21.28 9.6 20.32V24.32C11.52 25.12 13.44 25.6 15.2 25.6C19.2 25.6 22.08 23.68 22.08 20.48C22.08 14.88 14.4 15.84 14.4 13.6Z" fill="white"/>
-                      </svg>
-                    </div>
-                    <span className="text-[1.5rem] md:text-xs text-muted-foreground">
-                      Powered by Stripe
-                    </span>
-                  </div>
-                  {error && (
-                    <p className="mt-4 text-[1.75rem] md:text-sm text-red-600">
-                      {error}
-                    </p>
-                  )}
                 </CardContent>
               </Card>
             </div>
@@ -328,7 +294,7 @@ export function CheckoutPage({
                     className="w-full bg-primary hover:bg-primary/90 text-[2rem] md:text-base py-12 md:py-2"
                     size="lg"
                   >
-                    {loading ? "Redirecting…" : "Pay with Stripe"}
+                    {loading ? "Placing order…" : "Place Order"}
                   </Button>
 
                   <Button
