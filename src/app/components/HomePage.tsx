@@ -15,16 +15,16 @@ export function HomePage({ onNavigate }: HomePageProps) {
   const [isImageEnlarged, setIsImageEnlarged] = useState(false);
 
   const benefits = [
-    "Fast-acting pain relief",
+    "Verified customer review - \"Fast-acting relief\"",
     "100% natural ingredients",
     "Travel-friendly 10mL roll-on",
-    "Targets nerve & muscle pain",
+    "Targets nerve & muscle discomfort",
     "Soothes inflammation",
   ];
 
   const ingredients = [
-    { name: "CBD", description: "Premium cannabidiol for deep relief" },
-    { name: "CBG", description: "Enhanced cannabigerol support" },
+    { name: "CBD", description: "Premium cannabidiol. No THC. 3rd Party Tested Batches" },
+    { name: "CBG", description: "Premium cannabidiol. No THC. 3rd Party Tested Batches" },
     { name: "Arnica", description: "Traditional muscle recovery" },
     { name: "Frankincense", description: "Anti-inflammatory properties" },
     { name: "Myrrh", description: "Ancient healing compound" },
@@ -40,16 +40,14 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <div className="space-y-6">
               <div className="inline-block px-4 py-2 bg-secondary rounded-full">
                 <span className="text-6xl md:text-sm text-secondary-foreground">
-                  Natural Pain Relief
+                  Natural and Soothing
                 </span>
               </div>
               <h1 className="text-[5rem] md:text-5xl lg:text-6xl leading-tight">
                 Feel the Bond
               </h1>
               <p className="text-[2.5rem] md:text-xl text-muted-foreground leading-relaxed">
-                Experience powerful, natural pain relief with our premium Hemp CBD & CBG
-                roll-on formula. Blended with time-tested botanicals for fast,
-                effective results.
+                Experience the Bond with our premium Hemp CBD/CBG roll on formula. No THC. Blended with time-tested botanicals.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
@@ -93,11 +91,10 @@ export function HomePage({ onNavigate }: HomePageProps) {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-[3.5rem] md:text-4xl mb-4 leading-tight">
-              Targeted Relief for Your Pain
+              Targeted Relief for Your Discomfort
             </h2>
             <p className="text-[2rem] md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Our formula is specifically designed to address various types of pain
-              and discomfort
+              Our formula is specifically designed to address various types of discomfort
             </p>
           </div>
 
@@ -111,7 +108,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 />
               </div>
               <CardContent className="p-6">
-                <h3 className="text-[2.5rem] md:text-xl mb-2 text-white leading-tight">Nerve Pain</h3>
                 <p className="text-[1.75rem] md:text-base text-white/90 leading-relaxed">
                   Deep penetrating relief for nerve discomfort
                 </p>
@@ -127,7 +123,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 />
               </div>
               <CardContent className="p-6">
-                <h3 className="text-[2.5rem] md:text-xl mb-2 text-white leading-tight">Joint Pain</h3>
                 <p className="text-[1.75rem] md:text-base text-white/90 leading-relaxed">
                   Soothe arthritis and joint inflammation with natural botanicals
                 </p>
@@ -143,9 +138,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 />
               </div>
               <CardContent className="p-6">
-                <h3 className="text-[2.5rem] md:text-xl mb-2 text-white leading-tight">Muscle Soreness</h3>
                 <p className="text-[1.75rem] md:text-base text-white/90 leading-relaxed">
-                  Perfect for post-workout recovery and muscle tension relief
+                  Perfect for post-workout recovery and muscle tension
                 </p>
               </CardContent>
             </Card>
@@ -203,7 +197,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
       <section className="py-20 bg-gradient-to-br from-primary to-primary/80">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-[3.5rem] md:text-4xl text-white mb-6 leading-tight">
-            Ready to Experience Natural Relief?
+            Ready to Experience?
           </h2>
           <p className="text-[2rem] md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
             Make the skin connection with Feel the Bond.

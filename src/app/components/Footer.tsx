@@ -16,8 +16,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <span className="text-xl">Feel the Bond</span>
             </div>
             <p className="text-sm text-gray-400">
-              Natural pain relief you can trust. Premium Hemp CBD & CBG formula with
-              time-tested botanicals.
+              Premium Hemp CBD & CBG formula with time-tested botanicals and No-THC.
             </p>
           </div>
 

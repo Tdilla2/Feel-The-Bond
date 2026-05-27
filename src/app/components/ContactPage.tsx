@@ -215,7 +215,7 @@ export function ContactPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground text-[1.75rem] md:text-sm leading-relaxed">
-                  Our CBD is derived from hemp and contains less than 0.3% THC,
+                  Our CBD is derived from hemp and contains No THC,
                   making it legal under federal law in the United States.
                 </p>
               </AccordionContent>
@@ -239,7 +239,7 @@ export function ContactPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground text-[1.75rem] md:text-sm leading-relaxed">
-                  No. Our formula contains CBD and CBG from hemp with less than 0.3% THC, 
+                  No. Our formula contains CBD and CBG from hemp with No THC,
                   which is non-psychoactive and will not produce any intoxicating effects. This product is for external use only. It should not be consumed.
                 </p>
               </AccordionContent>
@@ -251,9 +251,8 @@ export function ContactPage() {
               </AccordionTrigger>
               <AccordionContent>
                 <p className="text-muted-foreground text-[1.75rem] md:text-sm leading-relaxed">
-                  While our product is made with natural ingredients, we recommend 
-                  consulting with your healthcare provider before use, especially if 
-                  you're taking other medications.
+                  While our product is made with natural ingredients, if you are concerned regarding topical use, we recommend
+                  consulting with your healthcare provider before use.
                 </p>
               </AccordionContent>
             </AccordionItem>

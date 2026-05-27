@@ -50,7 +50,10 @@ export function ProductPage({ onAddToCart }: ProductPageProps) {
             <div>
               <h1 className="text-[4rem] md:text-4xl mb-2 leading-tight">Feel the Bond</h1>
               <p className="text-[2rem] md:text-lg text-muted-foreground leading-relaxed">
-                CBD & CBG Pain Relief Roll-On
+                Botanicals and CBD / CBG Roll-On
+              </p>
+              <p className="text-[2rem] md:text-lg text-muted-foreground leading-relaxed">
+                No THC - 3rd Party Tested
               </p>
             </div>
 
@@ -62,7 +65,7 @@ export function ProductPage({ onAddToCart }: ProductPageProps) {
               </p>
               <p className="text-[1.75rem] md:text-base text-muted-foreground leading-relaxed">
                 Premium Hemp CBD and CBG blend with arnica, frankincense, myrrh, and
-                camphor. Fast-acting, natural pain relief for muscles, joints, and
+                camphor. Natural and soothing for muscles, joints, and
                 nerves.
               </p>
             </div>
@@ -70,7 +73,7 @@ export function ProductPage({ onAddToCart }: ProductPageProps) {
             {/* Active Ingredients */}
             <Card className="bg-secondary/20">
               <CardContent className="p-6">
-                <h3 className="text-[2.5rem] md:text-xl mb-3 leading-tight">Active Ingredients</h3>
+                <h3 className="text-[2.5rem] md:text-xl mb-3 leading-tight">Active Ingredients - No THC</h3>
                 <ul className="space-y-2 text-[1.75rem] md:text-sm leading-relaxed">
                   <li>• CBD (Cannabidiol) - Premium hemp extract</li>
                   <li>• CBG (Cannabigerol) - Enhanced support</li>

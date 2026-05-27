@@ -19,7 +19,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
       icon: Award,
       title: "Lab Tested CBD & CBG",
       description:
-        "Every batch is third-party tested for purity, potency, and safety.",
+        "Every batch is 3rd-party tested for purity, potency, and safety.",
     },
     {
       icon: Heart,
@@ -44,7 +44,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             <h1 className="text-[4rem] md:text-5xl mb-6 leading-tight">About Feel the Bond</h1>
             <p className="text-[2rem] md:text-xl text-muted-foreground leading-relaxed">
               We believe in the power of nature to heal and restore. Our mission is
-              to provide effective, natural pain relief that you can trust.
+              to provide effective, natural means that you can trust.
             </p>
           </div>
         </div>
@@ -58,13 +58,12 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
               <h2 className="text-[3.5rem] md:text-3xl leading-tight">Our Story</h2>
               <p className="text-[1.75rem] md:text-base text-muted-foreground leading-relaxed">
                 Feel the Bond was born from a personal journey to find natural
-                solutions for chronic pain. After years of relying on conventional
+                solutions for a chronic illness. After years of relying on conventional
                 treatments with limited success, we discovered the powerful
                 combination of CBD, CBG, and time-tested botanical remedies.
               </p>
               <p className="text-[1.75rem] md:text-base text-muted-foreground leading-relaxed">
-                We worked diligently on our formula to create a blend that delivers fast, effective
-                relief. The result is a product we're proud to share with you and
+                We worked diligently on our formula to create a blend that calms the discomfort. The result is a product we're proud to share with you and
                 your loved ones.
               </p>
               <Button
@@ -125,8 +124,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 <CardContent className="p-6">
                   <h3 className="text-[2.5rem] md:text-xl mb-3 leading-tight">Cannabinoids & Botanicals: The Power Duo</h3>
                   <p className="text-[1.75rem] md:text-base text-muted-foreground leading-relaxed">
-                    Our premium formula works synergistically to
-                    provide powerful anti-inflammatory and pain-relieving benefits that promote natural healing and relief.
+                    Our premium formula works synergistically.
                   </p>
                 </CardContent>
               </Card>
@@ -150,8 +148,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                   <p className="text-[1.75rem] md:text-base text-muted-foreground leading-relaxed">
                     Every ingredient is carefully sourced from trusted suppliers who
                     share our commitment to quality and sustainability.
-                    No artificial additives, fillers, or harsh chemicals—just pure,
-                    natural relief.
+                    No artificial additives, fillers, or harsh chemicals—just pure and natural.
                   </p>
                 </CardContent>
               </Card>
