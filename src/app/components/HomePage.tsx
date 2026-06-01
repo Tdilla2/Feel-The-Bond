@@ -1,10 +1,9 @@
-import image_ad90a7fff7c10394ec950960ee4217612ce5f695 from 'figma:asset/ad90a7fff7c10394ec950960ee4217612ce5f695.png'
-import image_b87f6e1d9a5c6a98803b7b4ce07ccbc97aa0e7a4 from 'figma:asset/b87f6e1d9a5c6a98803b7b4ce07ccbc97aa0e7a4.png'
+import basketballSunset from "../../assets/basketball-sunset-1on1.jpg";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Check, X } from "lucide-react";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import heroImage from "figma:asset/dc9419b75a09ec3159cd5b35291767b085b67200.png";
+import heroImage from "../../assets/hero-bottle.png";
 import { useState } from "react";
 
 interface HomePageProps {
@@ -15,20 +14,17 @@ export function HomePage({ onNavigate }: HomePageProps) {
   const [isImageEnlarged, setIsImageEnlarged] = useState(false);
 
   const benefits = [
-    "Verified customer review - \"Fast-acting relief\"",
     "100% natural ingredients",
     "Travel-friendly 10mL roll-on",
-    "Targets nerve & muscle discomfort",
-    "Soothes inflammation",
   ];
 
   const ingredients = [
+    { name: "Arnica", description: "" },
+    { name: "Frankincense", description: "" },
+    { name: "Myrrh", description: "" },
+    { name: "Camphor", description: "" },
     { name: "CBD", description: "Premium cannabidiol. No THC. 3rd Party Tested Batches" },
     { name: "CBG", description: "Premium cannabidiol. No THC. 3rd Party Tested Batches" },
-    { name: "Arnica", description: "Traditional muscle recovery" },
-    { name: "Frankincense", description: "Anti-inflammatory properties" },
-    { name: "Myrrh", description: "Ancient healing compound" },
-    { name: "Camphor", description: "Cooling sensation" },
   ];
 
   return (
@@ -90,11 +86,8 @@ export function HomePage({ onNavigate }: HomePageProps) {
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-[3.5rem] md:text-4xl mb-4 leading-tight">
-              Targeted Relief for Your Discomfort
-            </h2>
             <p className="text-[2rem] md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Our formula is specifically designed to address various types of discomfort
+              Our formula is specifically designed with Botanicals
             </p>
           </div>
 
@@ -102,46 +95,31 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-primary text-primary-foreground">
               <div className="aspect-video overflow-hidden">
                 <ImageWithFallback
-                  src={image_ad90a7fff7c10394ec950960ee4217612ce5f695}
-                  alt="Nerve neurotransmitters and synapses"
+                  src="https://images.unsplash.com/photo-1518611012118-696072aa579a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                  alt="Woman smiling while running"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <CardContent className="p-6">
-                <p className="text-[1.75rem] md:text-base text-white/90 leading-relaxed">
-                  Deep penetrating relief for nerve discomfort
-                </p>
-              </CardContent>
             </Card>
 
             <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-primary text-primary-foreground">
               <div className="aspect-video overflow-hidden">
                 <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1768644675720-2f274f84c87a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxodW1hbiUyMG11c2N1bG9za2VsZXRhbCUyMHN5c3RlbSUyMGFuYXRvbXl8ZW58MXx8fHwxNzc0NjQ4ODkxfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                  alt="Joint pain in musculoskeletal system"
+                  src={basketballSunset}
+                  alt="Two guys playing one-on-one basketball at sunset"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <CardContent className="p-6">
-                <p className="text-[1.75rem] md:text-base text-white/90 leading-relaxed">
-                  Soothe arthritis and joint inflammation with natural botanicals
-                </p>
-              </CardContent>
             </Card>
 
             <Card className="overflow-hidden hover:shadow-lg transition-shadow bg-primary text-primary-foreground">
               <div className="aspect-video overflow-hidden">
                 <ImageWithFallback
-                  src={image_b87f6e1d9a5c6a98803b7b4ce07ccbc97aa0e7a4}
-                  alt="Muscle pain and soreness"
+                  src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                  alt="Sprinter running"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <CardContent className="p-6">
-                <p className="text-[1.75rem] md:text-base text-white/90 leading-relaxed">
-                  Perfect for post-workout recovery and muscle tension
-                </p>
-              </CardContent>
             </Card>
           </div>
         </div>
@@ -176,7 +154,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               Premium Natural Ingredients
             </h2>
             <p className="text-[2rem] md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Every ingredient is carefully selected for maximum therapeutic benefit
+              Every ingredient is carefully selected
             </p>
           </div>
 
@@ -184,9 +162,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
             {ingredients.map((ingredient, index) => (
               <Card key={index} className="text-center p-6 hover:shadow-lg transition-shadow bg-primary text-primary-foreground">
                 <h3 className="text-[2.5rem] md:text-xl mb-2 text-white leading-tight">{ingredient.name}</h3>
-                <p className="text-[1.75rem] md:text-sm text-white/90 leading-relaxed">
-                  {ingredient.description}
-                </p>
+                {ingredient.description && (
+                  <p className="text-[1.75rem] md:text-sm text-white/90 leading-relaxed">
+                    {ingredient.description}
+                  </p>
+                )}
               </Card>
             ))}
           </div>

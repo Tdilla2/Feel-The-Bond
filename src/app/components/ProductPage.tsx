@@ -1,9 +1,8 @@
-import image_dc9419b75a09ec3159cd5b35291767b085b67200 from 'figma:asset/dc9419b75a09ec3159cd5b35291767b085b67200.png'
+import heroImage from "../../assets/hero-bottle.png";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Plus, Minus, Star, X } from "lucide-react";
 import { useState } from "react";
-import productImage from "figma:asset/f5e9b668661c3daceb2c69a1b1132805467915f2.png";
 
 interface ProductPageProps {
   onAddToCart: (quantity: number) => void;
@@ -38,7 +37,7 @@ export function ProductPage({ onAddToCart }: ProductPageProps) {
               onClick={() => setIsImageEnlarged(true)}
             >
               <img
-                src={image_dc9419b75a09ec3159cd5b35291767b085b67200}
+                src={heroImage}
                 alt="Feel the Bond 10mL Roll-On"
                 className="w-full h-full object-cover"
               />
@@ -197,7 +196,7 @@ export function ProductPage({ onAddToCart }: ProductPageProps) {
             <X className="h-8 w-8" />
           </button>
           <img
-            src={image_dc9419b75a09ec3159cd5b35291767b085b67200}
+            src={heroImage}
             alt="Feel the Bond 10mL Roll-On - Enlarged"
             className="max-w-full max-h-full object-contain"
           />

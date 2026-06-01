@@ -1,4 +1,4 @@
-import heroImage from "figma:asset/dc9419b75a09ec3159cd5b35291767b085b67200.png";
+import heroImage from "../../assets/hero-bottle.png";
 import { Mail, Phone, Globe } from "lucide-react";
 
 export function BusinessCard() {
