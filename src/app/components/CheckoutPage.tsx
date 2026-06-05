@@ -41,6 +41,11 @@ export function CheckoutPage({
   });
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const paymentApiUrl = import.meta.env.VITE_PAYMENT_API_URL as
+    | string
+    | undefined;
 
   const displayItems = checkoutSuccess && lastOrder ? lastOrder : items;
 
@@ -51,10 +56,58 @@ export function CheckoutPage({
   const shipping = subtotal > 50 ? 0 : 5.99;
   const total = subtotal + shipping;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    if (!paymentApiUrl) {
+      setError(
+        "Online payment isn't available right now. Please contact us to complete your order."
+      );
+      return;
+    }
+
     setLoading(true);
-    onOrderPlaced(items);
+    try {
+      // Persist the order so the confirmation screen can show it after we
+      // return from Square's hosted checkout (a full-page redirect resets state).
+      localStorage.setItem("ftb_pending_order", JSON.stringify(items));
+
+      const res = await fetch(paymentApiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            id: item.id,
+            quantity: item.quantity,
+          })),
+          customer: {
+            email: formData.email,
+            phone: formData.phone,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+          },
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.url) {
+        throw new Error(
+          data?.error || "Could not start checkout. Please try again."
+        );
+      }
+
+      // Hand off to Square's secure hosted checkout.
+      window.location.href = data.url;
+    } catch (err) {
+      localStorage.removeItem("ftb_pending_order");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong starting checkout."
+      );
+      setLoading(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -240,9 +293,14 @@ export function CheckoutPage({
                     </div>
                   </div>
                   <p className="text-[1.75rem] md:text-sm text-muted-foreground leading-relaxed">
-                    Online payment is not yet available. Place your order and
-                    we'll reach out to confirm payment details.
+                    You'll be redirected to Square's secure checkout to complete
+                    your payment. We never see or store your card details.
                   </p>
+                  {error && (
+                    <p className="mt-3 text-[1.75rem] md:text-sm text-destructive leading-relaxed">
+                      {error}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -294,7 +352,7 @@ export function CheckoutPage({
                     className="w-full bg-primary hover:bg-primary/90 text-[2rem] md:text-base py-12 md:py-2"
                     size="lg"
                   >
-                    {loading ? "Placing order…" : "Place Order"}
+                    {loading ? "Redirecting to Square…" : "Continue to Payment"}
                   </Button>
 
                   <Button

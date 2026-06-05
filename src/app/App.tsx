@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { HomePage } from "./components/HomePage";
@@ -34,9 +34,53 @@ type Page =
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>("home");
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    try {
+      const saved = localStorage.getItem("ftb_cart");
+      return saved ? (JSON.parse(saved) as CartItem[]) : [];
+    } catch {
+      return [];
+    }
+  });
   const [checkoutSuccess, setCheckoutSuccess] = useState(false);
   const [lastOrder, setLastOrder] = useState<CartItem[]>([]);
+
+  // Persist the cart so it survives the redirect to/from Square's checkout.
+  useEffect(() => {
+    try {
+      localStorage.setItem("ftb_cart", JSON.stringify(cartItems));
+    } catch {
+      /* ignore storage failures (e.g. private mode) */
+    }
+  }, [cartItems]);
+
+  // Handle the return from Square's hosted checkout (?payment=success|cancelled).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const payment = params.get("payment");
+    if (!payment) return;
+
+    if (payment === "success") {
+      let order: CartItem[] = [];
+      try {
+        const pending = localStorage.getItem("ftb_pending_order");
+        if (pending) order = JSON.parse(pending) as CartItem[];
+      } catch {
+        /* ignore */
+      }
+      localStorage.removeItem("ftb_pending_order");
+      setLastOrder(order);
+      setCheckoutSuccess(true);
+      setCartItems([]);
+      setCurrentPage("checkout");
+    } else if (payment === "cancelled") {
+      toast.info("Checkout canceled — your cart is still here.");
+      setCurrentPage("cart");
+    }
+
+    // Strip the query string so a refresh doesn't re-trigger this.
+    window.history.replaceState({}, "", window.location.pathname);
+  }, []);
 
   const handleOrderPlaced = (items: CartItem[]) => {
     setLastOrder(items);

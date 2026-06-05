@@ -10,3 +10,8 @@ dist
 .aws-sam
 lambda/*.zip
 lambda/**/package-lock.json
+
+# Amplify Gen 2 backend
+.amplify
+amplify_outputs*
+amplifyconfiguration*
