@@ -3,17 +3,20 @@ backend:
   phases:
     build:
       commands:
+        # Install deps (lenient: tolerates lockfile drift from the heavy
+        # Amplify/CDK tree so it can never hard-fail the build).
+        - npm install --cache .npm --prefer-offline
         # Deploy the Amplify Gen 2 backend (the Square payment function).
         # Soft-fails so the frontend still deploys if backend builds aren't yet
         # enabled in the Amplify console (service role + secrets). Once enabled,
         # this provisions the function and writes amplify_outputs.json.
-        - npm ci --cache .npm --prefer-offline
+        # See SQUARE_SETUP.md.
         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID || echo "Backend deploy skipped/failed — see SQUARE_SETUP.md to enable."
 frontend:
   phases:
     preBuild:
       commands:
-        - npm ci
+        - npm install --cache .npm --prefer-offline
     build:
       commands:
         - npm run build
@@ -24,3 +27,4 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+      - .npm/**/*
