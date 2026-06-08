@@ -35,7 +35,7 @@ site's confirmation screen instead:
 
 - The on-site order summary (subtotal/shipping/total) is indicative; the amount
   actually charged is whatever the Square link is configured for. Keep the
-  Square link's price ($24.99) and any shipping rules in sync with the site if
+  Square link's price ($19.99) and any shipping rules in sync with the site if
   you want them to match exactly.
 - For a fully dynamic cart (server-computed totals, multiple SKUs) you'd need a
   backend; that approach was removed in favor of this simpler no-code link.

@@ -123,7 +123,7 @@ export default function App() {
         {
           id: "feel-the-bond",
           name: "Feel the Bond",
-          price: 24.99,
+          price: 19.99,
           quantity,
         },
       ]);
