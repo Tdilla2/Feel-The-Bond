@@ -1,7 +1,5 @@
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { useState } from "react";
 import { Lock } from "lucide-react";
 
@@ -21,31 +19,20 @@ interface CheckoutPageProps {
   lastOrder?: CartItem[];
 }
 
+// Square no-code hosted payment link. Customers choose quantity, enter shipping,
+// and pay on Square's secure page — we never see or store card details.
+// To swap products/pricing, create a new link in the Square Dashboard
+// (Payment Links) and paste its URL here.
+const SQUARE_PAYMENT_LINK = "https://square.link/u/nz0qQAw0";
+
 export function CheckoutPage({
   items,
   onNavigate,
   onClearCart,
-  onOrderPlaced,
   checkoutSuccess,
   lastOrder,
 }: CheckoutPageProps) {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
-  });
-
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const paymentApiUrl = import.meta.env.VITE_PAYMENT_API_URL as
-    | string
-    | undefined;
 
   const displayItems = checkoutSuccess && lastOrder ? lastOrder : items;
 
@@ -56,65 +43,16 @@ export function CheckoutPage({
   const shipping = subtotal > 50 ? 0 : 5.99;
   const total = subtotal + shipping;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (!paymentApiUrl) {
-      setError(
-        "Online payment isn't available right now. Please contact us to complete your order."
-      );
-      return;
-    }
-
+  const handlePay = () => {
     setLoading(true);
+    // Save the cart so the confirmation screen can show it if the Square link
+    // is configured to redirect back to /?payment=success.
     try {
-      // Persist the order so the confirmation screen can show it after we
-      // return from Square's hosted checkout (a full-page redirect resets state).
       localStorage.setItem("ftb_pending_order", JSON.stringify(items));
-
-      const res = await fetch(paymentApiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items.map((item) => ({
-            id: item.id,
-            quantity: item.quantity,
-          })),
-          customer: {
-            email: formData.email,
-            phone: formData.phone,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-          },
-        }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data?.url) {
-        throw new Error(
-          data?.error || "Could not start checkout. Please try again."
-        );
-      }
-
-      // Hand off to Square's secure hosted checkout.
-      window.location.href = data.url;
-    } catch (err) {
-      localStorage.removeItem("ftb_pending_order");
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Something went wrong starting checkout."
-      );
-      setLoading(false);
+    } catch {
+      /* ignore storage failures (e.g. private mode) */
     }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    window.location.href = SQUARE_PAYMENT_LINK;
   };
 
   if (checkoutSuccess) {
@@ -180,195 +118,96 @@ export function CheckoutPage({
       <div className="container mx-auto px-4 py-8 md:py-12">
         <h1 className="text-[4rem] md:text-3xl mb-6 md:mb-8 leading-tight">Checkout</h1>
 
-        <form onSubmit={handleSubmit}>
-          <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
-            <div className="lg:col-span-2 space-y-6">
-              {/* Shipping Information */}
-              <Card>
-                <CardContent className="p-6">
-                  <h2 className="text-[2.5rem] md:text-xl mb-4 leading-tight">Shipping Information</h2>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="firstName" className="text-[1.75rem] md:text-sm">First Name</Label>
-                      <Input
-                        id="firstName"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        required
-                        className="text-[1.75rem] md:text-base h-20 md:h-10"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="lastName" className="text-[1.75rem] md:text-sm">Last Name</Label>
-                      <Input
-                        id="lastName"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        required
-                        className="text-[1.75rem] md:text-base h-20 md:h-10"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <Label htmlFor="email" className="text-[1.75rem] md:text-sm">Email</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="text-[1.75rem] md:text-base h-20 md:h-10"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <Label htmlFor="phone" className="text-[1.75rem] md:text-sm">Phone</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        required
-                        className="text-[1.75rem] md:text-base h-20 md:h-10"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <Label htmlFor="address" className="text-[1.75rem] md:text-sm">Address</Label>
-                      <Input
-                        id="address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        required
-                        className="text-[1.75rem] md:text-base h-20 md:h-10"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="city" className="text-[1.75rem] md:text-sm">City</Label>
-                      <Input
-                        id="city"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        required
-                        className="text-[1.75rem] md:text-base h-20 md:h-10"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="state" className="text-[1.75rem] md:text-sm">State</Label>
-                      <Input
-                        id="state"
-                        name="state"
-                        value={formData.state}
-                        onChange={handleChange}
-                        required
-                        className="text-[1.75rem] md:text-base h-20 md:h-10"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <Label htmlFor="zipCode" className="text-[1.75rem] md:text-sm">ZIP Code</Label>
-                      <Input
-                        id="zipCode"
-                        name="zipCode"
-                        value={formData.zipCode}
-                        onChange={handleChange}
-                        required
-                        className="text-[1.75rem] md:text-base h-20 md:h-10"
-                      />
-                    </div>
+        <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="lg:col-span-2 space-y-6">
+            {/* Payment */}
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-[2.5rem] md:text-xl leading-tight">Payment</h2>
+                  <div className="flex items-center text-[1.75rem] md:text-sm text-muted-foreground">
+                    <Lock className="h-8 w-8 md:h-4 md:w-4 mr-1" />
+                    <span>Secure Checkout</span>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Payment */}
-              <Card>
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-[2.5rem] md:text-xl leading-tight">Payment</h2>
-                    <div className="flex items-center text-[1.75rem] md:text-sm text-muted-foreground">
-                      <Lock className="h-8 w-8 md:h-4 md:w-4 mr-1" />
-                      <span>Secure Checkout</span>
-                    </div>
-                  </div>
-                  <p className="text-[1.75rem] md:text-sm text-muted-foreground leading-relaxed">
-                    You'll be redirected to Square's secure checkout to complete
-                    your payment. We never see or store your card details.
-                  </p>
-                  {error && (
-                    <p className="mt-3 text-[1.75rem] md:text-sm text-destructive leading-relaxed">
-                      {error}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Order Summary */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-20">
-                <CardContent className="p-6 space-y-4">
-                  <h3 className="text-[2.5rem] md:text-xl leading-tight">Order Summary</h3>
-
-                  <div className="space-y-3">
-                    {items.map((item) => (
-                      <div key={item.id} className="flex justify-between text-[1.75rem] md:text-sm leading-relaxed">
-                        <span>
-                          {item.name} x {item.quantity}
-                        </span>
-                        <span>${(item.price * item.quantity).toFixed(2)}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="border-t pt-4 space-y-2 text-[1.75rem] md:text-sm leading-relaxed">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Subtotal</span>
-                      <span>${subtotal.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Shipping</span>
-                      <span>
-                        {shipping === 0 ? (
-                          <span className="text-primary">Free</span>
-                        ) : (
-                          `$${shipping.toFixed(2)}`
-                        )}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="border-t pt-4">
-                    <div className="flex justify-between text-[2.5rem] md:text-lg leading-tight">
-                      <span>Total</span>
-                      <span className="text-primary">${total.toFixed(2)}</span>
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={loading || items.length === 0}
-                    className="w-full bg-primary hover:bg-primary/90 text-[2rem] md:text-base py-12 md:py-2"
-                    size="lg"
-                  >
-                    {loading ? "Redirecting to Square…" : "Continue to Payment"}
-                  </Button>
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full text-[2rem] md:text-base py-12 md:py-2"
-                    size="lg"
-                    onClick={() => onNavigate("cart")}
-                  >
-                    Cancel
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+                <p className="text-[1.75rem] md:text-sm text-muted-foreground leading-relaxed">
+                  Click below to finish on Square's secure checkout, where you'll
+                  confirm quantity, enter your shipping address, and pay. We never
+                  see or store your card details.
+                </p>
+              </CardContent>
+            </Card>
           </div>
-        </form>
+
+          {/* Order Summary */}
+          <div className="lg:col-span-1">
+            <Card className="sticky top-20">
+              <CardContent className="p-6 space-y-4">
+                <h3 className="text-[2.5rem] md:text-xl leading-tight">Order Summary</h3>
+
+                <div className="space-y-3">
+                  {items.map((item) => (
+                    <div key={item.id} className="flex justify-between text-[1.75rem] md:text-sm leading-relaxed">
+                      <span>
+                        {item.name} x {item.quantity}
+                      </span>
+                      <span>${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="border-t pt-4 space-y-2 text-[1.75rem] md:text-sm leading-relaxed">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Subtotal</span>
+                    <span>${subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Shipping</span>
+                    <span>
+                      {shipping === 0 ? (
+                        <span className="text-primary">Free</span>
+                      ) : (
+                        `$${shipping.toFixed(2)}`
+                      )}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="border-t pt-4">
+                  <div className="flex justify-between text-[2.5rem] md:text-lg leading-tight">
+                    <span>Total</span>
+                    <span className="text-primary">${total.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <p className="text-[1.5rem] md:text-xs text-muted-foreground leading-relaxed">
+                  Final quantity, shipping, and total are confirmed on Square's
+                  secure checkout.
+                </p>
+
+                <Button
+                  type="button"
+                  onClick={handlePay}
+                  disabled={loading || items.length === 0}
+                  className="w-full bg-primary hover:bg-primary/90 text-[2rem] md:text-base py-12 md:py-2"
+                  size="lg"
+                >
+                  {loading ? "Redirecting to Square…" : "Pay with Square"}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full text-[2rem] md:text-base py-12 md:py-2"
+                  size="lg"
+                  onClick={() => onNavigate("cart")}
+                >
+                  Back to Cart
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
