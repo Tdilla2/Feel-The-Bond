@@ -21,6 +21,13 @@ interface CartItem {
   quantity: number;
 }
 
+// Canonical product catalog — the single source of truth for name + price.
+// Persisted carts are reconciled against this on load so a price change always
+// wins over a stale price saved in localStorage.
+const CATALOG: Record<string, { name: string; price: number }> = {
+  "feel-the-bond": { name: "Feel the Bond", price: 19.99 },
+};
+
 type Page =
   | "home"
   | "product"
@@ -37,7 +44,16 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem("ftb_cart");
-      return saved ? (JSON.parse(saved) as CartItem[]) : [];
+      if (!saved) return [];
+      // Reconcile saved items against the current catalog (drop unknown items,
+      // refresh name + price so stale persisted prices can't linger).
+      return (JSON.parse(saved) as CartItem[])
+        .filter((item) => CATALOG[item.id])
+        .map((item) => ({
+          ...item,
+          name: CATALOG[item.id].name,
+          price: CATALOG[item.id].price,
+        }));
     } catch {
       return [];
     }
@@ -107,13 +123,15 @@ export default function App() {
   };
 
   const handleAddToCart = (quantity: number) => {
-    const existingItem = cartItems.find((item) => item.id === "feel-the-bond");
+    const productId = "feel-the-bond";
+    const product = CATALOG[productId];
+    const existingItem = cartItems.find((item) => item.id === productId);
 
     if (existingItem) {
       setCartItems(
         cartItems.map((item) =>
-          item.id === "feel-the-bond"
-            ? { ...item, quantity: item.quantity + quantity }
+          item.id === productId
+            ? { ...item, price: product.price, quantity: item.quantity + quantity }
             : item
         )
       );
@@ -121,9 +139,9 @@ export default function App() {
       setCartItems([
         ...cartItems,
         {
-          id: "feel-the-bond",
-          name: "Feel the Bond",
-          price: 19.99,
+          id: productId,
+          name: product.name,
+          price: product.price,
           quantity,
         },
       ]);
