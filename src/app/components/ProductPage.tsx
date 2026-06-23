@@ -56,7 +56,12 @@ export function ProductPage({ onAddToCart }: ProductPageProps) {
               </p>
             </div>
 
-            <div className="text-[3.5rem] md:text-3xl text-primary">$19.99</div>
+            <div>
+              <div className="text-[3.5rem] md:text-3xl text-primary">$19.99</div>
+              <div className="text-[2rem] md:text-base text-muted-foreground">
+                Reg Price <span className="line-through">$24.99</span>
+              </div>
+            </div>
 
             <div className="space-y-3">
               <p className="text-[2rem] md:text-lg leading-relaxed">
