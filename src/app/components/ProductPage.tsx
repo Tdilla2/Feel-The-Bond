@@ -56,12 +56,7 @@ export function ProductPage({ onAddToCart }: ProductPageProps) {
               </p>
             </div>
 
-            <div>
-              <div className="text-[3.5rem] md:text-3xl text-primary">$19.99</div>
-              <div className="text-[2rem] md:text-base text-muted-foreground">
-                Reg Price <span className="line-through">$24.99</span>
-              </div>
-            </div>
+            <div className="text-[3.5rem] md:text-3xl text-primary">$24.99</div>
 
             <div className="space-y-3">
               <p className="text-[2rem] md:text-lg leading-relaxed">
@@ -119,7 +114,7 @@ export function ProductPage({ onAddToCart }: ProductPageProps) {
               className="w-full bg-primary hover:bg-primary/90 text-[2rem] md:text-base py-12 md:py-2"
               size="lg"
             >
-              Add to Cart - ${(19.99 * quantity).toFixed(2)}
+              Add to Cart - ${(24.99 * quantity).toFixed(2)}
             </Button>
 
             <div className="pt-6 border-t space-y-2 text-[1.75rem] md:text-sm text-muted-foreground leading-relaxed">

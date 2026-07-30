@@ -52,7 +52,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                   size="lg"
                   className="bg-primary hover:bg-primary/90 text-[2rem] md:text-base py-12 md:py-2 px-8 md:px-4"
                 >
-                  On Sale Now - $19.99
+                  Shop Now - $24.99
                 </Button>
                 <Button
                   onClick={() => onNavigate("about")}
@@ -187,7 +187,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
             size="lg"
             className="bg-secondary text-secondary-foreground hover:bg-secondary/90 text-[2rem] md:text-base py-12 md:py-2 px-8 md:px-4"
           >
-            On Sale Now - $19.99
+            Order Now - $24.99
           </Button>
         </div>
       </section>

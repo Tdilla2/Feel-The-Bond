@@ -25,7 +25,7 @@ interface CartItem {
 // Persisted carts are reconciled against this on load so a price change always
 // wins over a stale price saved in localStorage.
 const CATALOG: Record<string, { name: string; price: number }> = {
-  "feel-the-bond": { name: "Feel the Bond", price: 19.99 },
+  "feel-the-bond": { name: "Feel the Bond", price: 24.99 },
 };
 
 type Page =
